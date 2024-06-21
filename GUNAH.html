@@ -1,0 +1,92 @@
+<html><head><base href="https://sinmeter.ai/">
+<title>Günah Kontrol Panel - Allah'ın kullarının günahlarını ölçün!</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .sin-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+</style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
+  <div class="max-w-md w-full bg-white rounded-lg shadow-xl p-6">
+    <h1 class="text-3xl font-bold text-center mb-6 text-red-600">Günah Kontrol Panel</h1>
+    <p class="text-gray-600 text-center mb-6">Bir kulun fotoğrafını yükleyin ve günahını kontrol edin</p>
+    
+    <form id="upload-form" class="mb-6">
+      <label for="photo-upload" class="block w-full cursor-pointer bg-red-500 text-white text-center py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300">
+        Kul'un fotoğrafını
+      </label>
+      <input type="file" id="photo-upload" accept="image/*" class="hidden" required>
+    </form>
+    
+    <div id="result" class="hidden">
+      <div class="mb-4">
+        <img id="uploaded-image" class="w-full h-64 object-cover rounded-lg" alt="Uploaded image">
+      </div>
+      <div class="bg-gray-200 rounded-full h-6 dark:bg-gray-700">
+        <div id="sin-meter" class="bg-red-600 h-6 rounded-full sin-pulse" style="width: 0%"></div>
+      </div>
+      <p id="sin-description" class="mt-4 text-center font-semibold"></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('photo-upload').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('uploaded-image').src = e.target.result;
+          document.getElementById('result').classList.remove('hidden');
+          analyzeSinfulness();
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function analyzeSinfulness() {
+      // Simulate API call with a random "sinfulness" value
+      const sinValue = Math.random() * 100;
+      const sinMeter = document.getElementById('sin-meter');
+      const sinDescription = document.getElementById('sin-description');
+
+      // Animate the sin meter
+      let width = 0;
+      const interval = setInterval(() => {
+        if (width >= sinValue) {
+          clearInterval(interval);
+          updateSinDescription(sinValue);
+        } else {
+          width++;
+          sinMeter.style.width = width + '%';
+        }
+      }, 20);
+    }
+
+    function updateSinDescription(value) {
+      const descriptions = [
+        { max: 5, text: "EN GÜZEL INSAN!" },
+        { max: 10, text: "Direkt melek" },
+        { max: 20, text: "Melek! Bu kul kardan daha saftır." },
+        { max: 25, text: "En azından cuma namazına gidiyor." },
+        { max: 30, text: "Namazında, dininde bir insan." },
+        { max: 40, text: "Çoğunluka masum... birkaç istisna dışında" },
+        { max: 50, text: "Ne iyi... Ne kötü." },
+        { max: 60, text: "Erdem ve kötülük arasında dengede. Tamamen insan!" },
+        { max: 70, text: "Hz Adem ile Havva'ya elmayı veren yılan." },
+        { max: 80, text: "Ebu Cehil'in önünde yanacak." },
+        { max: 90, text: "Zebani Efe." },
+        { max: 95, text: "Zebaniler götünü yağsız kuru kuru sikecek." }
+        { max: 100, text: "Zebanilerin başı." }
+      ];
+
+      const description = descriptions.find(d => value <= d.max);
+      document.getElementById('sin-description').textContent = `${Math.round(value)}% Günahı: ${description.text}`;
+    }
+  </script>
+
+</body></html>
